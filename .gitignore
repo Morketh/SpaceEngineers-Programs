@@ -3,3 +3,8 @@
 ################################################################################
 
 *.sqlite
+/.vs
+/Airlock Doors/AirlockDoors/.vs/AirlockDoors/v15
+/Airlock Doors/AirlockDoors/bin
+/Airlock Doors/AirlockDoors/obj/x64/Debug
+*.cache

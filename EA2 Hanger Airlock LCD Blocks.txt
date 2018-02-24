@@ -26,149 +26,150 @@ SENSOR BLOCK DEFAULT ACTIONS
 	Detect Enemy_Off
 
 @Variables{
-DoorDelay = 10000
-LEDWarning = 255:120:0  
-LEDDanger = 255:0:0  
-LEDClear = 0:255:0  
-BlinkInterval = 1.0 
-BlinkLength = 10.0  
-StatusRadius = 4.0  
-StatusIntensity = 2.0  
-SpeakerRange = 50  
-SpeakerVolume = 100  
-SpeakerLoopTime = math(30.0 + ((DoorDelay * 2) / 1000))
-AirlockAlertSound = "Alert 1" 
-}
-
-@AirlockReset{
-@ResetSensors
-@Seal Airlock
-@Open Inner Door Timed
-if Filled of Hanger Airlock O2Tank < 50
-{
-When Filled of Hanger Airlock O2Tank >= 50
-Depressurize_On Hanger Airvent
-}
-@Seal Airlock
-@AirlockExit
-}
-
-@ResetSensors{
-OnOff_Off Hanger Sensor
-Detect Players_Off Hanger Sensor
-Detect Floating Objects_Off Hanger Sensor
-Detect Small Ships_On Hanger Sensor
-Detect Large Ships_Off Hanger Sensor
-Detect Stations_Off Hanger Sensor
-Detect Subgrids_Off Hanger Sensor
-Detect Asteroids_Off Hanger Sensor
-Detect Owner_On Hanger Sensor
-Detect Friendly_On Hanger Sensor
-Detect Neutral_Off Hanger Sensor
-Detect Enemy_Off Hanger Sensor
-}
-
-@AlertOn{
-Sound of Hanger Speaker = AirlockAlertSound 
-RangeSlider of Hanger Speaker = SpeakerRange 
-VolumeSlider of Hanger Speaker = SpeakerVolume 
-LoopableSlider of Hanger Speaker = SpeakerLoopTime 
-OnOff_On Hanger Speaker
-PlaySound Hanger Speaker
-Color of Hanger Status = LEDWarning 
-Blink Interval of Hanger Status = BlinkInterval 
-Blink Lenght of Hanger Status = BlinkLength 
-Intensity of Hanger Status = StatusIntensity 
-Radius of Hanger Status = StatusRadius 
-} 
-
-@AlertEnter{
-OnOff_Off Hanger Speaker
-Color of Hanger Status Outter = LEDDanger  
-Color of Hanger Status Inner = LEDClear  
-Blink Interval of Hanger Status = 0.0  
-}
-
-@AlertExit{
-OnOff_Off Hanger Speaker  
-Color of Hanger Status Inner = LEDDanger  
-Color of Hanger Status Outter = LEDClear  
-Blink Interval of Hanger Status = 0.0
+	DoorDelay = 10000
+	LEDWarning = 255:120:0  
+	LEDDanger = 255:0:0  
+	LEDClear = 0:255:0  
+	BlinkInterval = 1.0 
+	BlinkLength = 10.0  
+	StatusRadius = 4.0  
+	StatusIntensity = 2.0  
+	SpeakerRange = 50  
+	SpeakerVolume = 100  
+	SpeakerLoopTime = math(30.0 + ((DoorDelay * 2) / 1000))
+	AirlockAlertSound = "Alert 1" 
 }
 
 @AirlockExit{
-OnOff_Off Hanger Sensor External
-@AlertOn
-@Depressurize Airlock
-@Open Outer Door Timed
-@AlertExit
-OnOff_On Hanger Sensor Inner
-} 
+	OnOff_Off Hanger Sensor External
+	@AlertOn
+	@Depressurize Airlock
+	@Open Outer Door Timed
+	@AlertExit
+	OnOff_On Hanger Sensor Inner
+}
 
 @AirlockEnter{ 
-OnOff_Off Hanger Sensor Inner
-@AlertOn
-@Repressurize Airlock
-@Open Inner Door Timed
-@AlertEnter
-OnOff_On Hanger Sensor External
+	OnOff_Off Hanger Sensor Inner
+	@AlertOn
+	@Repressurize Airlock
+	@Open Inner Door Timed
+	@AlertEnter
+	OnOff_On Hanger Sensor External
+}
+
+@AirlockReset{
+	@ResetSensors
+	@Seal Airlock
+	@Open Inner Door Timed
+	If Filled of Hanger Airlock O2Tank < 50
+	{
+		Depressurize_On Hanger Airvent
+		When Filled of Hanger Airlock O2Tank >= 50
+		Depressurize_Off Hanger Airvent
+	}
+	@Seal Airlock
+	@AirlockExit
+}
+
+@ResetSensors{
+	OnOff_Off Hanger Sensor
+	Detect Players_Off Hanger Sensor
+	Detect Floating Objects_Off Hanger Sensor
+	Detect Small Ships_On Hanger Sensor
+	Detect Large Ships_Off Hanger Sensor
+	Detect Stations_Off Hanger Sensor
+	Detect Subgrids_Off Hanger Sensor
+	Detect Asteroids_Off Hanger Sensor
+	Detect Owner_On Hanger Sensor
+	Detect Friendly_On Hanger Sensor
+	Detect Neutral_Off Hanger Sensor
+	Detect Enemy_Off Hanger Sensor
+}
+
+@AlertOn{
+	Sound of Hanger Speaker = AirlockAlertSound 
+	RangeSlider of Hanger Speaker = SpeakerRange 
+	VolumeSlider of Hanger Speaker = SpeakerVolume 
+	LoopableSlider of Hanger Speaker = SpeakerLoopTime 
+	OnOff_On Hanger Speaker
+	PlaySound Hanger Speaker
+	Color of Hanger Status = LEDWarning 
+	Blink Interval of Hanger Status = BlinkInterval 
+	Blink Lenght of Hanger Status = BlinkLength 
+	Intensity of Hanger Status = StatusIntensity 
+	Radius of Hanger Status = StatusRadius 
+} 
+
+@AlertEnter{
+	OnOff_Off Hanger Speaker
+	Color of Hanger Status Outter = LEDDanger  
+	Color of Hanger Status Inner = LEDClear  
+	Blink Interval of Hanger Status = 0.0  
+}
+
+@AlertExit{
+	OnOff_Off Hanger Speaker  
+	Color of Hanger Status Inner = LEDDanger  
+	Color of Hanger Status Outter = LEDClear  
+	Blink Interval of Hanger Status = 0.0
 }
 
 @Open Outer Door Timed{
-OnOff_On Hangar Outter
-Delay 1
-Open_On Hangar Outter
-Delay DoorDelay
-OnOff_Off Hangar Outter
+	OnOff_On Hangar Outter
+	Delay 1
+	Open_On Hangar Outter
+	Delay DoorDelay
+	OnOff_Off Hangar Outter
 }
 
 @Open Inner Door Timed{
-OnOff_On HangerDoor Inner 
-Delay 1
-Open_On HangerDoor Inner 
-Delay DoorDelay 
-OnOff_Off HangerDoor Inner
+	OnOff_On HangerDoor Inner 
+	Delay 1
+	Open_On HangerDoor Inner 
+	Delay DoorDelay 
+	OnOff_Off HangerDoor Inner
 }
 
 @Depressurize Airlock{
-@Seal Airlock
-Depressurize_On Hanger Airvent
-if Open of Hangar Outter = Off
-{
-	When Room pressure of Hanger Airvent = 0
-}
-Delay 2000
+	@Seal Airlock
+	Depressurize_On Hanger Airvent
+	If Open of Hangar Outter = Off
+	{
+		When Room pressure of Hanger Airvent = 0
+	}
+	Delay 2000
 }
 
 @Repressurize Airlock{          
-@Seal Airlock  
-Depressurize_Off Hanger Airvent
-When Room pressure of Hanger Airvent = 100    
-Delay 2000
+	@Seal Airlock  
+	Depressurize_Off Hanger Airvent
+	When Room pressure of Hanger Airvent = 100    
+	Delay 2000
 }
 
 @Seal Airlock{
-if Open of Hangar Outter = Open
-{
-  OnOff_On Hangar Outter
-  Delay 1
-  Open_Off Hangar Outter
-}
-if Open of HangerDoor Inner = Open 
-{
-  OnOff_On HangerDoor Inner
-  Delay 1
-  Open_Off HangerDoor Inner
-}
-Delay DoorDelay
-OnOff_Off Hangar Outter    
-OnOff_Off HangerDoor Inner
+	if Open of Hangar Outter = Open
+	{
+		OnOff_On Hangar Outter
+		Delay 1
+		Open_Off Hangar Outter
+	}
+	if Open of HangerDoor Inner = Open 
+	{
+		OnOff_On HangerDoor Inner
+		Delay 1
+		Open_Off HangerDoor Inner
+	}
+	Delay DoorDelay
+	OnOff_Off Hangar Outter    
+	OnOff_Off HangerDoor Inner
 }
 
 @ShowSensor{
-Show properties of Hanger Sensor Inner
+	Show properties of Hanger Sensor Inner
 }
 
 @ShowTank{
-Show details of Hanger Airlock O2Tank
+	Show details of Hanger Airlock O2Tank
 }
