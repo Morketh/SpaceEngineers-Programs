@@ -1,8 +1,8 @@
 AirlockDoor Variables once Coren impliments block name variables.
 
-AirlockDoorInner = "Airlock Dock Inner" 
-AirlockDoorOuter = "Airlock Door Outer" 
-AirlockVent = "Hanger Airvent" 
+AirlockDoorInner = "Airlock SmallDock Inner" 
+AirlockDoorOuter = "Airlock SmallDock Outter" 
+AirlockVent = "Airlock SmallDock Vent" 
 AirlockWarnStatusLED =  "Hanger Status" 
 AirlockCabinLED = "Hanger Status Cabin" 
 AirlockExitLED = "Hanger Status Exit" 
@@ -38,17 +38,6 @@ SENSOR BLOCK DEFAULT ACTIONS
 	SpeakerVolume = 100  
 	SpeakerLoopTime = math(30.0 + ((DoorDelay * 2) / 1000))
 	AirlockAlertSound = "Alert 1" 
-	LCDFontSize = 1.5
-}
-
-@ScreenEnter{
-	FontSize of [LCD] Hanger Control Status = LCDFontSize
-	FontColor of [LCD] Hanger Control Status = LEDClear
-}
-
-@ScreenExit{
-	FontSize of [LCD] Hanger Control Status = LCDFontSize
-	FontColor of [LCD] Hanger Control Status = LEDDanger
 }
 
 @AirlockExit{
@@ -58,7 +47,6 @@ SENSOR BLOCK DEFAULT ACTIONS
 	@Open Outer Door Timed
 	@AlertExit
 	OnOff_On Hanger Sensor Inner
-	@ScreenExit
 } 
 
 @AirlockEnter{ 
@@ -68,7 +56,6 @@ SENSOR BLOCK DEFAULT ACTIONS
 	@Open Inner Door Timed
 	@AlertEnter
 	OnOff_On Hanger Sensor External
-	@ScreenEnter
 }
 
 @AirlockReset{
@@ -77,9 +64,9 @@ SENSOR BLOCK DEFAULT ACTIONS
 	@Open Inner Door Timed
 	If Filled of Hanger Airlock O2Tank < 50
 	{
-		Depressurize_On Hanger Airvent
+		Depressurize_On Airlock SmallDock Vent
 		When Filled of Hanger Airlock O2Tank >= 50
-		Depressurize_Off Hanger Airvent
+		Depressurize_Off Airlock SmallDock Vent
 	}
 	@Seal Airlock
 	@AirlockExit
@@ -146,18 +133,18 @@ SENSOR BLOCK DEFAULT ACTIONS
 
 @Depressurize Airlock{
 	@Seal Airlock
-	Depressurize_On Hanger Airvent
+	Depressurize_On Airlock SmallDock Vent
 	If Open of Hangar Outter = Off
 	{
-		When Room pressure of Hanger Airvent = 0
+		When Room pressure of Airlock SmallDock Vent = 0
 	}
 	Delay 2000
 }
 
 @Repressurize Airlock{          
 	@Seal Airlock  
-	Depressurize_Off Hanger Airvent
-	When Room pressure of Hanger Airvent = 100    
+	Depressurize_Off Airlock SmallDock Vent
+	When Room pressure of Airlock SmallDock Vent = 100    
 	Delay 2000
 }
 

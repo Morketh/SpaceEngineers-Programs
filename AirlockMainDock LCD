@@ -1,0 +1,129 @@
+Airlock MainDock  
+- Status Cabin 
+- Status Exit 
+ 
+Airlock MainDock 
+- Inner 
+- Outer 
+ 
+Airlock MainDock Vent 
+Airlock MainDock Speaker 
+ 
+Airlock MainDock O2 Tank (1-4) 
+ 
+ 
+AirlockDoorInner = "Airlock Dock Inner"  
+AirlockDoorOuter = "Airlock Door Outer"  
+AirlockVent = "Airlock MainDock Vent"  
+AirlockWarnStatusLED =  "Airlock Status"  
+AirlockCabinLED = "Airlock Status Cabin"  
+AirlockExitLED = "Airlock Status Exit"  
+AirlockSpeaker = "Airlock MainDock Speaker"  
+ 
+ 
+@Variables{ 
+DoorDelay = 4000   
+LEDWarning = 255:120:0   
+LEDDanger = 255:0:0   
+LEDClear = 0:255:0   
+BlinkInterval = 1.0  
+BlinkLength = 10.0   
+StatusRadius = 4.0   
+StatusIntensity = 2.0   
+SpeakerRange = 50   
+SpeakerVolume = 100   
+SpeakerLoopTime = 15.0   
+AirlockAlertSound = "Alert 1"  
+} 
+
+@AlertOn{ 
+Sound of Airlock MainDock Speaker = AirlockAlertSound  
+RangeSlider of Airlock MainDock Speaker = SpeakerRange  
+VolumeSlider of Airlock MainDock Speaker = SpeakerVolume  
+LoopableSlider of Airlock MainDock Speaker = SpeakerLoopTime  
+OnOff_On Airlock MainDock Speaker 
+PlaySound Airlock MainDock Speaker 
+Color of Airlock MainDock Status = LEDWarning  
+Blink Interval of Airlock MainDock Status = BlinkInterval  
+Blink Lenght of Airlock MainDock Status = BlinkLength  
+Intensity of Airlock MainDock Status = StatusIntensity  
+Radius of Airlock MainDock Status = StatusRadius  
+}  
+ 
+@AlertEnter{ 
+OnOff_Off Airlock MainDock Speaker 
+Color of Airlock MainDock Status Exit = LEDDanger   
+Color of Airlock MainDock Status Cabin = LEDClear   
+Blink Interval of Airlock MainDock Status = 0.0   
+} 
+ 
+@AlertExit{ 
+OnOff_Off Airlock MainDock Speaker   
+Color of Airlock MainDock Status Cabin = LEDDanger   
+Color of Airlock MainDock Status Exit = LEDClear   
+Blink Interval of Airlock MainDock Status = 0.0 
+} 
+  
+@AirlockExit{ 
+@AlertOn 
+@Repressurize Airlock 
+@Open Inner Door Timed 
+@Depressurize Airlock 
+@Open Outer Door Timed 
+@AlertExit 
+}  
+  
+@AirlockEnter{
+@AlertOn
+@Depressurize Airlock 
+@Open Outer Door Timed 
+@Repressurize Airlock 
+@Open Inner Door Timed 
+@AlertEnter 
+} 
+ 
+@Open Outer Door Timed{ 
+OnOff_On Airlock MainDock Outer 
+Delay 1 
+Open_On Airlock MainDock Outer 
+Delay DoorDelay 
+} 
+ 
+@Open Inner Door Timed{ 
+OnOff_On Airlock MainDock Inner  
+Delay 1 
+Open_On Airlock MainDock Inner  
+Delay DoorDelay  
+} 
+ 
+@Depressurize Airlock{
+@Seal Airlock 
+Depressurize_On Airlock MainDock Vent 
+When Room pressure of Airlock MainDock Vent = 0 
+Delay 2000 
+} 
+ 
+@Repressurize Airlock{           
+@Seal Airlock   
+Depressurize_Off Airlock MainDock Vent 
+When Room pressure of Airlock MainDock Vent = 100     
+Delay 2000 
+} 
+ 
+@Seal Airlock{ 
+if Open of Airlock MainDock Outer = Open 
+{ 
+  OnOff_On Airlock MainDock Outer 
+  Delay 1 
+  Open_Off Airlock MainDock Outer 
+} 
+if Open of Airlock MainDock Inner = Open  
+{ 
+  OnOff_On Airlock MainDock Inner 
+  Delay 1 
+  Open_Off Airlock MainDock Inner 
+} 
+Delay 1500 
+OnOff_Off Airlock MainDock Outer     
+OnOff_Off Airlock MainDock Inner 
+}
